@@ -1,10 +1,8 @@
 import pymongo
 from decouple import config
 
-# get connection string from .env file
-MONGO_CONNECTION_STRING = config("MONGO_CONNECTION_STRING")
-# initialize database connection
-client = pymongo.MongoClient(MONGO_CONNECTION_STRING)
+# get connection string from .env file and initialize database connection
+client = pymongo.MongoClient(config("MONGO_CONNECTION_STRING"))
 # create database
 db = client.fms
 
