@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
 from database.database import fms_cars
-from models.car import CarModel
+from app.models.car import CarModel
 
 router = APIRouter()
 

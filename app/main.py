@@ -1,13 +1,27 @@
 import logging
+import sys
 import time
+
+import uvicorn
+from decouple import config
 
 from fastapi import FastAPI, Request
 
-from routes.driver import router as driver_router
-from routes.car import router as car_router
-from routes.trip import router as trip_router
+from app.routes.driver import router as driver_router
+from app.routes.car import router as car_router
+from app.routes.trip import router as trip_router
 
+# configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
 logger = logging.getLogger(__name__)
+
+HOST = config("HOST")
+PORT = int(config("PORT"))
 
 # instantiate FastAPI
 app = FastAPI()
@@ -44,3 +58,8 @@ async def handle_http_middleware(request, call_next):
         f"({'{0:.2f}'.format(process_time)} ms)"
     )
     return response
+
+
+if __name__ == "__main__":
+    logger.info(f"Server listening on http://{HOST}:{PORT}")
+    uvicorn.run(app="app.main:app", host=HOST, port=PORT, log_level=logging.WARNING)

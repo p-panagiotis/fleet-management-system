@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  api:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "80:80"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+
+  rabbitmq:
+    image: rabbitmq:latest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  publisher:
+    build:
+      context: ./
+      dockerfile: ./publisher/Dockerfile
+    env_file:
+      - .env
+
+  consumer:
+    build:
+      context: ./
+      dockerfile: ./consumer/Dockerfile
+    env_file:
+      - .env

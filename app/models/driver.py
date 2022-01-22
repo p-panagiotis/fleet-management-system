@@ -73,7 +73,8 @@ class DriverPenaltyModel(BaseModel):
             name=entity["driver_id"],
             speed=entity["speed"],
             penalty_points=entity["penalty_points"],
-            geo_coordinates=entity["geo_coordinates"]
+            latitude=entity["latitude"],
+            longitude=entity["longitude"]
         )
 
     class Config:
@@ -82,6 +83,7 @@ class DriverPenaltyModel(BaseModel):
                 "driver_id": "61e9d7fa22d8e7b0e053d289",
                 "speed": 81,
                 "penalty_points": 2,
-                "geo_coordinates": "34.749168, 32.569975"
+                "latitude": "34.749168",
+                "longitude": "32.569975"
             }
         }

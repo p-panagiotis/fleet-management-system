@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
 from database.database import fms_trips
-from models.trip import TripModel
+from app.models.trip import TripModel
 
 router = APIRouter()
 
