@@ -5,8 +5,6 @@ services:
     build: .
     env_file:
       - .env
-    volumes:
-      - .:/app
     ports:
       - "80:80"
     depends_on:
@@ -27,14 +25,14 @@ services:
 
   publisher:
     build:
-      context: ./
+      context: .
       dockerfile: ./publisher/Dockerfile
     env_file:
       - .env
 
   consumer:
     build:
-      context: ./
+      context: .
       dockerfile: ./consumer/Dockerfile
     env_file:
       - .env
