@@ -62,7 +62,7 @@ class Consumer(object):
         )
 
     def on_bindok(self, *args, **kwargs):
-        """ Invoked by pika when it receives the bind ok response from RabbitMQ. Schedule next heartbeat. """
+        """ Invoked by pika when it receives the bind ok response from RabbitMQ. Schedule next message. """
         self.set_channel_qos()
 
     def set_channel_qos(self):
@@ -75,19 +75,15 @@ class Consumer(object):
 
     def start_consuming(self):
         """ Starts basic queue consuming from RabbitMQ server. """
-        self._consumer_tag = self._channel.basic_consume(
-            queue=self.QUEUE,
-            auto_ack=True,
-            on_message_callback=self.consume_heartbeat
-        )
+        self._consumer_tag = self._channel.basic_consume(queue=self.QUEUE, on_message_callback=self.consume_message)
 
     def stop_consuming(self):
         """ Terminate queue consumer with RabbitMQ server. """
         if self._channel:
             self._channel.basic_cancel(self._consumer_tag, callback=self.close_channel)
 
-    def consume_heartbeat(self, channel, method, properties, body):
-        logger.info(f"Received heartbeat {body}")
+    def consume_message(self, channel, method, properties, body):
+        logger.info(f"Received message {body}")
         data = json.loads(body)
 
         car_id = data["car_id"]
@@ -118,6 +114,9 @@ class Consumer(object):
                 "latitude": latitude,
                 "longitude": longitude
             })
+
+        logger.info(f"Acknowledge message {method.delivery_tag}")
+        self._channel.basic_ack(method.delivery_tag)
 
     def close_channel(self):
         """ Command to close the channel with RabbitMQ server. """

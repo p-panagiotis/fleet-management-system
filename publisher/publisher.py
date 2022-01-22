@@ -62,19 +62,19 @@ class Publisher(object):
         )
 
     def on_bindok(self, *args, **kwargs):
-        """ Invoked by pika when it receives the bind ok response from RabbitMQ. Schedule next heartbeat. """
-        self.schedule_next_heartbeat()
+        """ Invoked by pika when it receives the bind ok response from RabbitMQ. Schedule next message. """
+        self.schedule_next_message()
 
-    def schedule_next_heartbeat(self):
+    def schedule_next_message(self):
         """ Schedule message to be delivered in interval seconds. """
-        self._connection.ioloop.call_later(self.PUBLISH_INTERVAL, self.publish_heartbeat)
+        self._connection.ioloop.call_later(self.PUBLISH_INTERVAL, self.publish_message)
 
-    def publish_heartbeat(self):
-        """ Publish heartbeat to the RabbitMQ server queue. """
+    def publish_message(self):
+        """ Publish message to the RabbitMQ server queue. """
         # fetch distinct cars with drivers
         cars = fms_drivers_cars.find({"car_id": {"$ne": None}, "driver_id": {"$ne": None}}).distinct("car_id")
 
-        # process heartbeat for each car
+        # generate random message for each car
         for car_id in cars:
             # generate random car speed
             speed = random.randint(0, 200)
@@ -86,9 +86,9 @@ class Publisher(object):
             # publish message
             message = bytes(json.dumps(data), encoding="utf8")
             self._channel.basic_publish(exchange=self.EXCHANGE, routing_key=self.ROUTING_KEY, body=message)
-            logger.info(f"Published heartbeat {message}")
+            logger.info(f"Published message {message}")
 
-        self.schedule_next_heartbeat()
+        self.schedule_next_message()
 
     def close_channel(self):
         """ Command to close the channel with RabbitMQ server. """
