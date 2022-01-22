@@ -7,7 +7,7 @@ import pika
 from decouple import config
 from pika.exchange_type import ExchangeType
 
-from database import fms_drivers_cars
+from database.database import fms_drivers_cars
 
 logger = logging.getLogger(__name__)
 

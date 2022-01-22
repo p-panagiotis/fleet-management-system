@@ -3,8 +3,8 @@ from bson.errors import InvalidId
 from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
-from database import fms_trips
-from models import TripModel
+from database.database import fms_trips
+from models.trip import TripModel
 
 router = APIRouter()
 

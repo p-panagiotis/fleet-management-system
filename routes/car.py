@@ -3,8 +3,8 @@ from bson.errors import InvalidId
 from fastapi import APIRouter, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 
-from database import fms_cars
-from models import CarModel
+from database.database import fms_cars
+from models.car import CarModel
 
 router = APIRouter()
 
